@@ -1,0 +1,227 @@
+:root {
+    /* Parking system theme colors */
+    --parking-blue: #1e3a8a;
+    --parking-light-blue: #3b82f6;
+    --parking-dark: #1f2937;
+    --parking-light: #f3f4f6;
+    --available-green: #10b981;
+    --occupied-red: #ef4444;
+    --highlight-yellow: #ffc107;
+    --highlight-bg: #fff3cd;
+}
+
+/* General Styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Parking Grid */
+.parking-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+/* Parking Slot Styles */
+.parking-slot {
+    height: 80px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.parking-slot.available {
+    background-color: var(--available-green);
+    color: white;
+}
+
+.parking-slot.occupied {
+    background-color: var(--occupied-red);
+    color: white;
+    cursor: not-allowed;
+}
+
+.parking-slot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.parking-slot.occupied:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Highlighted Slot (after detection) */
+.parking-slot.highlighted {
+    animation: pulseHighlight 1s ease-in-out 3;
+    border: 3px solid var(--highlight-yellow);
+    background-color: var(--highlight-bg) !important;
+    color: var(--parking-dark) !important;
+}
+
+/* Highlight animation */
+@keyframes pulseHighlight {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Map Style */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* License Plate Detection */
+.plate-detection {
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Digital Card */
+.digital-card {
+    background: linear-gradient(135deg, var(--parking-blue), var(--parking-light-blue));
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.digital-card .card-number {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+/* Active Parking */
+.active-parking {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-left: 4px solid var(--available-green);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+/* Pulse animation for other elements */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Dashboard Cards */
+.stats-card {
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stats-card .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stats-card .number {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Vehicle Cards */
+.vehicle-card {
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.detection-result {
+    background-color: #d1fae5; /* Soft green background */
+    color: #1f2937;           /* Dark text */
+    padding: 16px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+/* Nested content styling */
+.detection-result .info-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.detection-result .info-label {
+    font-weight: 700;
+}
+
+.detection-result .info-value {
+    margin-bottom: 0.5rem;
+}
+
+/* Park button styling */
+.detection-result .btn-park {
+    margin-top: 1rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 600;
+    background-color: #1f2937;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.detection-result .btn-park:hover {
+    background-color: #111827;
+}
+
+
+/* Responsive: Mobile Adjustments */
+@media (max-width: 767.98px) {
+    .parking-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    #map {
+        height: 300px;
+    }
+}

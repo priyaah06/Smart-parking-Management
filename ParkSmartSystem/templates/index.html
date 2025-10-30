@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-6 order-lg-2">
+        <div class="text-center mb-4">
+            <svg width="300" height="300" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                <!-- Parking Building SVG -->
+                <rect x="150" y="100" width="500" height="600" fill="#3b82f6" rx="10" />
+                <rect x="200" y="150" width="400" height="550" fill="#1e3a8a" rx="5" />
+                
+                <!-- Slots -->
+                <rect x="250" y="200" width="80" height="120" fill="#10b981" rx="5" />
+                <rect x="360" y="200" width="80" height="120" fill="#ef4444" rx="5" />
+                <rect x="470" y="200" width="80" height="120" fill="#10b981" rx="5" />
+                
+                <rect x="250" y="350" width="80" height="120" fill="#ef4444" rx="5" />
+                <rect x="360" y="350" width="80" height="120" fill="#10b981" rx="5" />
+                <rect x="470" y="350" width="80" height="120" fill="#ef4444" rx="5" />
+                
+                <rect x="250" y="500" width="80" height="120" fill="#10b981" rx="5" />
+                <rect x="360" y="500" width="80" height="120" fill="#ef4444" rx="5" />
+                <rect x="470" y="500" width="80" height="120" fill="#10b981" rx="5" />
+                
+                <!-- Parking Sign -->
+                <rect x="310" y="50" width="180" height="80" fill="#2563eb" rx="40" />
+                <text x="400" y="100" font-family="Arial" font-size="50" font-weight="bold" text-anchor="middle" fill="white">P</text>
+                
+                <!-- Car -->
+                <rect x="600" y="650" width="150" height="80" fill="#64748b" rx="20" />
+                <rect x="630" y="690" width="30" height="30" fill="#000" rx="15" />
+                <rect x="690" y="690" width="30" height="30" fill="#000" rx="15" />
+                <rect x="630" y="660" width="90" height="40" fill="#cbd5e1" rx="5" />
+            </svg>
+        </div>
+    </div>
+    <div class="col-lg-6 order-lg-1">
+        <h1 class="display-4 fw-bold mb-4">Smart Parking System</h1>
+        <p class="lead mb-4">Experience hassle-free parking with our intelligent parking management system. Find available slots, automated navigation, and digital payment processing.</p>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-4 me-md-2">Go to Dashboard</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4 me-md-2">Login</a>
+            <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 pt-3">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">Key Features</h2>
+    </div>
+</div>
+
+<div class="row g-4 py-4">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 bg-dark">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-car-side fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">Indoor & Outdoor Parking</h3>
+                <p class="card-text">Choose between indoor parking with real-time slot availability indicators or outdoor parking with GPS navigation.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 bg-dark">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-camera-retro fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">License Plate Recognition</h3>
+                <p class="card-text">Our system automatically recognizes license plates for quick and seamless entry and exit from parking facilities.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100 border-0 bg-dark">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-credit-card fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">Digital Payment</h3>
+                <p class="card-text">Manage your parking expenses with our digital card system. View history and process payments automatically.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <h2 class="fw-bold mb-4">How It Works</h2>
+    </div>
+    
+    <div class="col-md-10 mx-auto">
+        <div class="card bg-dark border-0">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-user-plus text-white"></i>
+                        </div>
+                        <h5>Register</h5>
+                        <p class="small">Create an account to access all features</p>
+                    </div>
+                    
+                    <div class="col-md-3 text-center">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-car text-white"></i>
+                        </div>
+                        <h5>Add Vehicles</h5>
+                        <p class="small">Register your vehicles for quick access</p>
+                    </div>
+                    
+                    <div class="col-md-3 text-center">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <h5>Find Parking</h5>
+                        <p class="small">Choose indoor or outdoor parking options</p>
+                    </div>
+                    
+                    <div class="col-md-3 text-center">
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-receipt text-white"></i>
+                        </div>
+                        <h5>Digital Card</h5>
+                        <p class="small">Manage parking history and payments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

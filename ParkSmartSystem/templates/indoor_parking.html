@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="fw-bold">Indoor Parking</h1>
+        <p class="text-muted">Find and reserve indoor parking slots.</p>
+    </div>
+</div>
+
+<!-- License Plate Detection Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-0 plate-detection">
+            <div class="card-body">
+                <h4 class="mb-3"><i class="fas fa-camera me-2"></i> License Plate Detection</h4>
+                <p class="text-muted mb-3">Simulate license plate detection to find an available parking slot quickly.</p>
+                
+                <form id="license-detection-form" class="mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="license-plate-input" placeholder="Enter license plate (e.g., ABC123)">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i> Detect
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="detection-result" class="d-none">
+                    <!-- Detection results will be added here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parking Map Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-0">
+            <div class="card-header">
+                <h4 class="mb-0">Indoor Parking Map</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <span class="badge bg-success me-2">Available</span>
+                        <span class="badge bg-danger">Occupied</span>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <!-- Level tabs -->
+                        <div class="col-12">
+                            <ul class="nav nav-tabs mb-3" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="level1-tab" data-bs-toggle="tab" data-bs-target="#level1" type="button" role="tab">Level 1</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="level2-tab" data-bs-toggle="tab" data-bs-target="#level2" type="button" role="tab">Level 2</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="level3-tab" data-bs-toggle="tab" data-bs-target="#level3" type="button" role="tab">Level 3</button>
+                                </li>
+                            </ul>
+                            
+                            <!-- Tab content -->
+                            <div class="tab-content">
+                                <!-- Level 1 -->
+                                <div class="tab-pane fade show active" id="level1" role="tabpanel">
+                                    <div class="parking-grid">
+                                        {% for slot in indoor_slots if slot.area == 'Level 1' %}
+                                        <div class="parking-slot {{ 'occupied' if slot.is_occupied else 'available' }}" 
+                                             data-slot-id="{{ slot.id }}" 
+                                             data-slot-number="{{ slot.slot_number }}">
+                                            {{ slot.slot_number }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Level 2 -->
+                                <div class="tab-pane fade" id="level2" role="tabpanel">
+                                    <div class="parking-grid">
+                                        {% for slot in indoor_slots if slot.area == 'Level 2' %}
+                                        <div class="parking-slot {{ 'occupied' if slot.is_occupied else 'available' }}" 
+                                             data-slot-id="{{ slot.id }}" 
+                                             data-slot-number="{{ slot.slot_number }}">
+                                            {{ slot.slot_number }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Level 3 -->
+                                <div class="tab-pane fade" id="level3" role="tabpanel">
+                                    <div class="parking-grid">
+                                        {% for slot in indoor_slots if slot.area == 'Level 3' %}
+                                        <div class="parking-slot {{ 'occupied' if slot.is_occupied else 'available' }}" 
+                                             data-slot-id="{{ slot.id }}" 
+                                             data-slot-number="{{ slot.slot_number }}">
+                                            {{ slot.slot_number }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manual Parking Form -->
+                <div id="parking-form" class="d-none">
+                    <div class="card bg-primary bg-opacity-10 border-0">
+                        <div class="card-body">
+                            <h5 class="mb-3">Park at Slot: <span id="selected-slot-number"></span></h5>
+                            
+                            <form id="manual-park-form">
+                                <input type="hidden" id="selected-slot-id">
+                                
+                                <div class="mb-3">
+                                    <label for="vehicle-select" class="form-label">Select Vehicle</label>
+                                    <select class="form-select" id="vehicle-select" required>
+                                        <option value="">-- Select Vehicle --</option>
+                                        {% for vehicle in vehicles %}
+                                        <option value="{{ vehicle.id }}">{{ vehicle.license_plate }} - {{ vehicle.make }} {{ vehicle.model }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-parking me-2"></i> Park Vehicle
+                                    </button>
+                                    <button type="button" class="btn btn-secondary ms-2" 
+                                            onclick="document.getElementById('parking-form').classList.add('d-none')">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/indoor_parking.js') }}"></script>
+{% endblock %}

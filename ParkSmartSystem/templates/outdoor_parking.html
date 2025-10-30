@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="fw-bold">Outdoor Parking</h1>
+        <p class="text-muted">Navigate to the nearest available outdoor parking slot.</p>
+    </div>
+</div>
+
+<!-- License Plate Detection Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-0 plate-detection">
+            <div class="card-body">
+                <h4 class="mb-3"><i class="fas fa-camera me-2"></i> License Plate Detection</h4>
+                <p class="text-muted mb-3">Simulate license plate detection to find an available parking slot quickly.</p>
+                
+                <form id="license-detection-form-outdoor" class="mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="license-plate-input-outdoor" placeholder="Enter license plate (e.g., ABC123)">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i> Detect
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="detection-result-outdoor" class="d-none">
+                    <!-- Detection results will be added here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Destination Search Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-0">
+            <div class="card-header">
+                <h4 class="mb-0">Find Nearest Parking Slot</h4>
+            </div>
+            <div class="card-body">
+                <div id="map" class="mb-4">
+                    <!-- Map will be initialized here -->
+                </div>
+                
+                <form id="destination-form" class="d-none">
+                    <input type="hidden" id="user-lat">
+                    <input type="hidden" id="user-lng">
+                    <input type="hidden" id="destination-lat">
+                    <input type="hidden" id="destination-lng">
+                    
+                    <div class="mb-3">
+                        <label for="destination-input" class="form-label">Enter Your Destination</label>
+                        <input type="text" class="form-control" id="destination-input" placeholder="Search for a location...">
+                    </div>
+                    
+                    <button type="button" id="find-parking-btn" class="btn btn-primary d-none">
+                        <i class="fas fa-search-location me-2"></i> Find Nearest Parking
+                    </button>
+                </form>
+                
+                <div id="parking-slot-info" class="mt-4 d-none">
+                    <!-- Parking slot info will be added here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vehicle selection for license plate detection results -->
+<div class="d-none">
+    <select id="vehicle-select">
+        {% for vehicle in vehicles %}
+        <option value="{{ vehicle.id }}">{{ vehicle.license_plate }} - {{ vehicle.make }} {{ vehicle.model }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Google Maps API with places library - using callback pattern without API key for demo -->
+<script>
+// Define the initMap function before loading the API
+function initMap() {
+    // Create a simple map without Google Maps API for demo purposes
+    console.log("Map initialized in demo mode");
+    const mapDiv = document.getElementById('map');
+    if (mapDiv) {
+        mapDiv.innerHTML = '<div class="bg-secondary p-4 text-center rounded"><p>Google Maps demo mode</p><p class="mb-0">Real map would appear here with proper API key</p></div>';
+        
+        // Show the destination form anyway
+        document.getElementById('destination-form').classList.remove('d-none');
+    }
+    
+    // Make autocomplete fields work in demo mode
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.id === 'destination-input' && this.value) {
+                document.getElementById('find-parking-btn').classList.remove('d-none');
+                
+                // Set sample coordinates
+                document.getElementById('destination-lat').value = '40.7128';
+                document.getElementById('destination-lng').value = '-74.0060';
+            }
+        });
+    });
+}
+
+// Simulate Google Maps functionality
+window.google = {
+    maps: {
+        Map: function() { return {}; },
+        Marker: function() { return {}; },
+        LatLng: function() { return {}; },
+        places: { Autocomplete: function() { 
+            return { 
+                addListener: function() {},
+                bindTo: function() {}
+            }; 
+        }},
+        DirectionsService: function() { return {}; },
+        DirectionsRenderer: function() { return {}; },
+        TravelMode: { DRIVING: 'DRIVING' }
+    }
+};
+</script>
+<script src="{{ url_for('static', filename='js/outdoor_parking.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h1 class="fw-bold">Digital Parking Card</h1>
+        <p class="text-muted">Manage your parking records and payments.</p>
+    </div>
+</div>
+
+<!-- Digital Card Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="digital-card">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="mb-3">{{ current_user.username }}'s Parking Card</h4>
+                    <div class="card-number">ID: {{ current_user.id }}</div>
+                    <p>{{ current_user.email }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h4 class="mb-3">Registered Vehicles</h4>
+                    <p>{{ vehicles|length }} vehicles registered</p>
+                    <p>
+                        {% for vehicle in vehicles %}
+                        <span class="badge bg-primary me-1">{{ vehicle.license_plate }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Active Parkings Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark border-0">
+            <div class="card-header">
+                <h4 class="mb-0">Active Parkings</h4>
+            </div>
+            <div class="card-body">
+                {% set active_parkings = parking_history|selectattr('exit_time', 'none')|list %}
+                
+                {% if active_parkings %}
+                <div class="row g-3">
+                    {% for parking in active_parkings %}
+                    <div class="col-md-6">
+                        <div class="active-parking">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="mb-0">{{ parking.vehicle.license_plate }}</h5>
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            
+                            <p class="mb-1">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ parking.slot.slot_number }} ({{ parking.slot.area }})
+                            </p>
+                            
+                            <p class="mb-1">
+                                <i class="fas fa-clock me-2"></i>
+                                Entry: {{ parking.entry_time.strftime('%Y-%m-%d %H:%M') }}
+                            </p>
+                            
+                            <p class="mb-3 text-muted">
+                                <i class="fas fa-info-circle me-2"></i>
+                                {{ parking.parking_type }} Parking
+                            </p>
+                            
+                            <button class="btn btn-danger btn-sm exit-parking-btn" data-record-id="{{ parking.id }}">
+                                <i class="fas fa-sign-out-alt me-1"></i> Exit & Pay
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-car-side fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No active parkings</h5>
+                    <p>Your vehicles are not currently parked in any slots.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parking History Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark border-0">
+            <div class="card-header">
+                <h4 class="mb-0">Parking History</h4>
+            </div>
+            <div class="card-body">
+                {% set completed_parkings = parking_history|selectattr('exit_time', 'defined')|list %}
+                
+                {% if completed_parkings %}
+                <div class="table-responsive">
+                    <table class="table table-hover" id="parking-history-table">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true" data-column="date" data-order="desc">Date</th>
+                                <th data-sortable="true" data-column="vehicle">Vehicle</th>
+                                <th data-sortable="true" data-column="location">Location</th>
+                                <th data-sortable="true" data-column="duration">Duration</th>
+                                <th data-sortable="true" data-column="fee">Fee</th>
+                                <th data-sortable="true" data-column="status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for parking in completed_parkings %}
+                            <tr>
+                                <td data-column="date" data-timestamp="{{ parking.entry_time.isoformat() }}">
+                                    {{ parking.entry_time.strftime('%Y-%m-%d') }}
+                                </td>
+                                <td data-column="vehicle">
+                                    {{ parking.vehicle.license_plate }}
+                                </td>
+                                <td data-column="location">
+                                    {{ parking.slot.slot_number }} ({{ parking.slot.area }})
+                                </td>
+                                <td data-column="duration" data-value="{{ parking.duration or 0 }}">
+                                    {% if parking.duration %}
+                                        {% set hours = (parking.duration / 60)|int %}
+                                        {% set mins = parking.duration % 60 %}
+                                        {% if hours > 0 %}{{ hours }}h {% endif %}{{ mins }}m
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td data-column="fee" data-value="{{ parking.fee or 0 }}">
+                                    ${{ "%.2f"|format(parking.fee or 0) }}
+                                </td>
+                                <td data-column="status">
+                                    <span class="badge bg-success">{{ parking.payment_status }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No parking history</h5>
+                    <p>Your parking history will appear here after you complete a parking session.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/digital_card.js') }}"></script>
+{% endblock %}
